@@ -1,0 +1,29 @@
+description: >
+  Example of using AsyncAPI Generator and uploading to S3
+usage:
+  version: 2.1
+  orbs:
+    ag: swiberdev/asyncapi-generator@1.0.0
+    aws-s3: circleci/aws-s3@3.0
+  jobs:
+    sync-s3:
+      docker:
+        - image: cimg/python:3.6
+      steps:
+        - attach_workspace:
+            at: /tmp/asyncapi-generator
+        - aws-s3/sync:
+            from: /tmp/asyncapi-generator
+            to: 's3://my-s3-bucket-name/prefix'
+            arguments: |
+              --acl public-read \
+              --cache-control "max-age=86400"
+  workflows:
+    asyncapi-generator-example:
+      jobs:
+        - ag/run:
+            arguments: -p baseHref=/test-experiment/ -p sidebarOrganization=byTags
+            filepath: docs/api/my-asyncapi.yml
+            output: generated-html
+            template: '@asyncapi/html-template@0.15.4'
+        - sync-s3
