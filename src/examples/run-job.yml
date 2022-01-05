@@ -1,0 +1,15 @@
+description: >
+  Checkout, install, and run AsyncAPI Generator
+usage:
+  version: 2.1
+  orbs:
+    ag: swiberdev/asyncapi-generator@1.0.0
+  workflows:
+    asyncapi-generator-example:
+      jobs:
+        - ag/run:
+            arguments: -p baseHref=/test-experiment/ -p sidebarOrganization=byTags
+            executor: latest
+            filepath: docs/api/my-asyncapi.yml
+            template: '@asyncapi/html-template@0.15.4'
+            output: generated-html
